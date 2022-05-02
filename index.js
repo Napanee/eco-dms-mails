@@ -4,7 +4,7 @@ const {simpleParser} = require('mailparser');
 
 
 const client = new ImapFlow({
-    host: process.env.EMAIL_USER,
+    host: process.env.EMAIL_URL,
     port: process.env.EMAIL_PORT || 993,
     secure: true,
     auth: {
