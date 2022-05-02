@@ -49,4 +49,4 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          tags: napanee/eco-dms-mail:${{ steps.vars.outputs.tag }}
+          tags: napanee/eco-dms-mails:${{ steps.vars.outputs.tag }}
