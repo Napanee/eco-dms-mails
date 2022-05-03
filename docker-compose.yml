@@ -2,9 +2,9 @@ version: "3"
 services:
   server:
     build:
-      dockerfile: Dockerfile
+      dockerfile: ./deployment/Dockerfile
       context: ./
-    env_file: ./.env
+    env_file: ./deployment/.env
     restart: unless-stopped
     volumes:
       - './files:/uploads'

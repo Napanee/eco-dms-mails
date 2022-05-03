@@ -1,18 +1,16 @@
-FROM node:16
+FROM node:16-alpine
 
 ENV CONTAINER_USER=container
 
-RUN apt-get update
-RUN apt-get install -y cron
+RUN apk update \
+	&& apk upgrade \
+	&& apk add bash cronie
 
 WORKDIR /app
 
-COPY crontab /etc/cron.d/mail-cron
-COPY package.json \
-	package-lock.json \
-	index.js \
-	server-entrypoint.sh \
-	/app/
+COPY deployment/crontab /etc/crontab
+COPY package.json package-lock.json index.js /app/
+COPY deployment/server-entrypoint.sh /app/server-entrypoint.sh
 
 RUN set -ex \
 	&& addgroup --gid 99 $CONTAINER_USER \
@@ -21,8 +19,8 @@ RUN set -ex \
 	&& rm -rf /root/.npm \
 	&& rm -rf /root/.node-gyp \
 	&& chmod +x /app/server-entrypoint.sh \
-	&& chmod 0644 /etc/cron.d/mail-cron \
-	&& crontab /etc/cron.d/mail-cron \
+	&& chmod +x /etc/crontab \
+	&& crontab /etc/crontab \
 	&& touch /var/log/cron.log
 
 ENTRYPOINT ["./server-entrypoint.sh"]
