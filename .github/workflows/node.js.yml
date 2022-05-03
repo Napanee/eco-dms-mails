@@ -47,6 +47,6 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: .
-          file: ./Dockerfile
+          file: ./deployment/Dockerfile
           push: true
           tags: napanee/eco-dms-mails:${{ steps.vars.outputs.tag }}, napanee/eco-dms-mails:latest
