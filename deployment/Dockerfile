@@ -9,7 +9,7 @@ RUN apk update \
 WORKDIR /app
 
 COPY deployment/crontab /etc/crontab
-COPY package.json package-lock.json index.js /app/
+COPY package.json package-lock.json dist/index.js /app/
 COPY deployment/server-entrypoint.sh /app/server-entrypoint.sh
 
 RUN set -ex \
