@@ -7,7 +7,12 @@ RUN apt-get install -y cron
 
 WORKDIR /app
 
-COPY package.json package-lock.json /app/
+COPY crontab /etc/cron.d/mail-cron
+COPY package.json \
+	package-lock.json \
+	index.js \
+	server-entrypoint.sh \
+	/app/
 
 RUN set -ex \
 	&& addgroup --gid 99 $CONTAINER_USER \
@@ -15,12 +20,10 @@ RUN set -ex \
 	&& npm install --quiet --loglevel=error --production \
 	&& rm -rf /root/.npm \
 	&& rm -rf /root/.node-gyp \
-	&& mkdir -p /scaninput \
-	&& chmod 0644 /scaninput \
+	&& chmod +x /app/server-entrypoint.sh \
+	&& chmod 0644 /etc/cron.d/mail-cron \
+	&& crontab /etc/cron.d/mail-cron \
 	&& touch /var/log/cron.log
 
-COPY index.js /app/index.js
-
-RUN crontab -l | { cat; echo "* * * * * /usr/local/bin/node /app/index.js"; } | crontab -
-
-CMD cron && tail -f /var/log/cron.log
+ENTRYPOINT ["./server-entrypoint.sh"]
+CMD ["bash"]

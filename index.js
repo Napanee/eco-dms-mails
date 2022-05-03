@@ -2,8 +2,7 @@ const fs = require('fs');
 const {ImapFlow} = require('imapflow');
 const {simpleParser} = require('mailparser');
 
-
-const client = new ImapFlow({
+const config = {
     host: process.env.EMAIL_URL,
     port: process.env.EMAIL_PORT || 993,
     secure: true,
@@ -11,7 +10,8 @@ const client = new ImapFlow({
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASSWORD,
     }
-});
+};
+const client = new ImapFlow(config);
 
 const main = async () => {
     const mails = [];
@@ -35,8 +35,9 @@ const main = async () => {
                         const {content, filename} = file;
 
                         try {
-                            fs.writeFileSync(`/upload/${filename}`, content);
+                            fs.writeFileSync(`/uploads/${filename}`, content);
                         } catch (error) {
+                            console.log(error.message);
                             return error.message;
                         }
 
